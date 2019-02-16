@@ -6,4 +6,4 @@ Two main modules:-
 
 To be done:- Fix issue for foreign keys (can be fixed after implementing basic auth) , complete ride after 5 minutes even if the user closes the frontend through a cron   
  
-Note: All APIs are either PUT or POST only as mentioned. However ,we can have get APIS for dashboard .
+Note: All APIs are either PUT or POST only as mentioned. However ,we can have get APIS for dashboard . Please find the Post man collection for api documentation
