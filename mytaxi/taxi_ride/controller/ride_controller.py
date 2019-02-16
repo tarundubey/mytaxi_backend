@@ -2,6 +2,8 @@ from taxi_auth.models import Role, User
 from taxi_ride.models import Request
 from django.db.models import Q, F
 import datetime
+import time
+
 
 
 
@@ -63,13 +65,49 @@ def get_available_requests(data,acceptor_id,user):
     if data.get('status') is None:
         raise Exception('Status not specified')
     status=data['status']
+
     if status == "pending":
           request_qs=Request.objects.filter(status='pending').values()
+          response_qs =request_qs
+          for request in request_qs:
+              now = datetime.datetime.now()
+              created_at = request['created_at']
+              request['created_at']=get_time_difference(now,created_at)-330 # time diff between mysql and django is 5.5hrs
+
     else:
         request_qs = Request.objects.filter(status=status,accepted_by=acceptor_id).values()
-    return request_qs
+        response_qs=[]
+        for request in request_qs:
+            now = datetime.datetime.now()
+            created_at = request['created_at']
+            minutes = get_time_difference(now, created_at) - 330  # time diff between mysql and django is 5.5hrs
+            request['created_at'] = minutes
+            if request['status']=='ongoing' and minutes>=5:
+                finish_request(request,request['request_id'],user)
+            else:
+                response_qs.append(request)
+    return response_qs
 
 def get_all_requests(user):
     request_qs = Request.objects.filter().values()
+    for request in request_qs:
+        now = datetime.datetime.now()
+        created_at = request['created_at']
+        picked_up_at=request['picked_up_at']
+        completed_at=request['completed_at']
+        if picked_up_at is not None:
+            request['picked_up_at']=get_time_difference(now,picked_up_at)
+        if completed_at is not None:
+            request['completed_at']=get_time_difference(now,completed_at)
+        request['created_at'] =  get_time_difference(now, created_at) - 330
     return request_qs
 
+def get_time_difference(t1,t2):
+    t1=datetime.datetime.strftime(t1,"%Y-%m-%d %H:%M:%S")
+    t2=datetime.datetime.strftime(t2,"%Y-%m-%d %H:%M:%S")
+    dt1=datetime.datetime.strptime(t1,"%Y-%m-%d %H:%M:%S")
+    dt2=datetime.datetime.strptime(t2,"%Y-%m-%d %H:%M:%S")
+    duration = dt1 - dt2
+    duration_in_s = duration.total_seconds()
+    minutes = divmod(duration_in_s, 60)[0]
+    return minutes
