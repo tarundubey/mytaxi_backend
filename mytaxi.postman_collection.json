@@ -1,0 +1,166 @@
+{
+	"variables": [],
+	"info": {
+		"name": "mytaxi",
+		"_postman_id": "15639ec1-9acf-ffc1-9e85-acb094ab1a6f",
+		"description": "API collection containing all available backend APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Place Request",
+			"description": "Customer places a request for ride. POST request with customer id sent in the body",
+			"item": [
+				{
+					"name": "Request a  ride",
+					"request": {
+						"url": "http://localhost:7000/api/request/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "jwt i50kd7hm7gw204a9kcwhr1l4ir91y0sp",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"requested_by\":\"5\"\n}"
+						},
+						"description": "Place a request for ride with customer_id of the customer"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Accept Request",
+			"description": "Driver accepts a request",
+			"item": [
+				{
+					"name": "Accept ride request",
+					"request": {
+						"url": "http://localhost:7000/api/request/2/accept/",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "jwt i50kd7hm7gw204a9kcwhr1l4ir91y0sp",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"acceptor\":\"4\"\n}"
+						},
+						"description": "Driver accepts a request . PUT request with driver's id passed in the body that updates the request"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Finish request",
+			"description": "Finish a request",
+			"item": [
+				{
+					"name": "Request completed",
+					"request": {
+						"url": "http://localhost:7000/api/request/6/complete/",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "jwt i50kd7hm7gw204a9kcwhr1l4ir91y0sp",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "PUT request that updates the request status to finished"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get available request",
+			"description": "Driver dashboard app to get available, complete and finished requests for him/her",
+			"item": [
+				{
+					"name": "Driver dashboard ",
+					"request": {
+						"url": "http://localhost:7000/api/dashboard/2/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "jwt i50kd7hm7gw204a9kcwhr1l4ir91y0sp",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"status\":\"pending\"\n}"
+						},
+						"description": "POST call with to get 'pending' requests , along with 'ongoing' and 'finished' rides for the given driver"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get all requests",
+			"description": "Request to generate dashboard for admin, with all requests",
+			"item": [
+				{
+					"name": "http://localhost:7000/api/dashboard/",
+					"request": {
+						"url": "http://localhost:7000/api/dashboard/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "jwt i50kd7hm7gw204a9kcwhr1l4ir91y0sp",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "POST request to get stats of all the requests for admin dashboard"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
