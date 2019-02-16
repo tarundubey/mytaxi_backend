@@ -82,9 +82,18 @@ def get_available_requests(data,acceptor_id,user):
             created_at = request['created_at']
             minutes = get_time_difference(now, created_at) - 330  # time diff between mysql and django is 5.5hrs
             request['created_at'] = minutes
-            if request['status']=='ongoing' and minutes>=5:
-                finish_request(request,request['request_id'],user)
+            start_time = request['picked_up_at']
+            time_elapsed = get_time_difference(now,start_time)
+            request['picked_up_at'] = time_elapsed
+            if request['status']=='ongoing':
+                if time_elapsed>=5:
+                     finish_request(request,request['request_id'],user)
+                else:
+                    response_qs.append(request)
             else:
+                end_time = request['completed_at']
+                time_elapsed = get_time_difference(now,end_time)
+                request['completed_at']=time_elapsed
                 response_qs.append(request)
     return response_qs
 
