@@ -30,6 +30,9 @@ def accept_request(data,request_id,user):
         raise Exception('Requestor not registered')
     if request_id is None:
         raise Exception('Request Id not found')
+    ongoing_request_qs = Request.objects.filter(status='ongoing', accepted_by=acceptor_id).values()
+    if len(ongoing_request_qs) > 0:
+        raise Exception('Requestor can have only one ongoing request')
     request=Request.objects.get(request_id=request_id)
     if request is None:
         raise Exception('Invalid request id')
