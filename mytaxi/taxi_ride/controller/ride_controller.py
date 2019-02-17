@@ -1,32 +1,35 @@
 from taxi_auth.models import Role, User
 from taxi_ride.models import Request
 from django.db.models import Q, F
+from taxi_auth.controller.user_controller import create_user
 import datetime
 import time
-
-
-
 
 def create_request(data,user):
     if data.get('requested_by') is None:
         raise Exception('Requestor not found')
     requestor_id=data['requested_by']
-    user=User.objects.get(id=requestor_id)
+    try:
+         user=User.objects.get(id=requestor_id)
+    except:
+        user=create_user(requestor_id)
+        requestor_id=user.id
     if user is None:
         raise Exception('Requestor not registered')
     data_dict={
         'status':'pending',
         'accepted_by':None,
-        'requested_by':data['requested_by']
+        'requested_by':requestor_id
     }
     request=Request.objects.create(**data_dict)
     request.save()
-    return request
+    return requestor_id
 
 def accept_request(data,request_id,user):
     if data.get('acceptor') is None:
         raise Exception('Acceptor not found')
     acceptor_id = data['acceptor']
+
     user = User.objects.get(id=acceptor_id)
     if user is None:
         raise Exception('Requestor not registered')

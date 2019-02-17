@@ -12,9 +12,15 @@ class RequestView(APIView):
     def post(self,request):
         user = request.user
         with transaction.atomic():
+
             try:
-                create_request(request.data, request.user)
-                return Response({'message': 'Request created successfully!'})
+                assigned_id=create_request(request.data, request.user)
+                requestor_id = request.data['requested_by']
+                if assigned_id==requestor_id:
+                      return Response({'message': 'Request created successfully!'})
+                else:
+                    return Response({'message': 'Request created successfully! Your new id is:'+str(assigned_id)})
+
             except Exception as e:
                 print(e)
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
