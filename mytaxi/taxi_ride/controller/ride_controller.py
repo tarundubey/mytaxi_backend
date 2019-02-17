@@ -3,12 +3,15 @@ from taxi_ride.models import Request
 from django.db.models import Q, F
 from taxi_auth.controller.user_controller import create_user
 import datetime
+import math
 import time
 
 def create_request(data,user):
     if data.get('requested_by') is None:
         raise Exception('Requestor not found')
     requestor_id=data['requested_by']
+    if data.get('latitude') is None or data.get('longitude') is None:
+        raise Exception('Invalid location')
     try:
          user=User.objects.get(id=requestor_id)
     except:
@@ -16,7 +19,12 @@ def create_request(data,user):
         requestor_id=user.id
     if user is None:
         raise Exception('Requestor not registered')
+    user_request_qs=Request.objects.filter(requested_by=requestor_id,status='pending').values()
+    if len(user_request_qs)>=10:
+        raise Exception("Maximum incomplete requests allowed are 10")
     data_dict={
+        'latitude':data['latitude'],
+        'longitude':data['longitude'],
         'status':'pending',
         'accepted_by':None,
         'requested_by':requestor_id
@@ -71,11 +79,23 @@ def get_available_requests(data,acceptor_id,user):
 
     if status == "pending":
           request_qs=Request.objects.filter(status='pending').values()
-          response_qs =request_qs
+          response_qs =[]
           for request in request_qs:
-              now = datetime.datetime.now()
-              created_at = request['created_at']
-              request['created_at']=get_time_difference(now,created_at)-330 # time diff between mysql and django is 5.5hrs
+              request_lat =request['latitude']
+              request_long=request['longitude']
+              possible_autos = get_available_autos(request_lat, request_long)
+              if acceptor_id-1 in possible_autos:
+                  print(acceptor_id)
+                  print(possible_autos)
+                  now = datetime.datetime.now()
+                  created_at = request['created_at']
+                  request['created_at']=get_time_difference(now,created_at) # time diff between mysql and django is 5.5hrs
+                  response_qs.append(request)
+              else:
+                  now = datetime.datetime.now()
+                  created_at = request['created_at']
+                  request['created_at'] = get_time_difference(now,created_at)  # time diff between mysql and django is 5.5hrs
+                  continue
 
     else:
         request_qs = Request.objects.filter(status=status,accepted_by=acceptor_id).values()
@@ -93,9 +113,12 @@ def get_available_requests(data,acceptor_id,user):
                      finish_request(request,request['request_id'],user)
                 else:
                     response_qs.append(request)
-            else:
+            elif request['status']=='finished':
                 end_time = request['completed_at']
-                time_elapsed = get_time_difference(now,end_time)
+                if(end_time!=None):
+                     time_elapsed = get_time_difference(now,end_time)
+                else:
+                    time_elapsed=None
                 request['completed_at']=time_elapsed
                 response_qs.append(request)
     return response_qs
@@ -123,3 +146,33 @@ def get_time_difference(t1,t2):
     duration_in_s = duration.total_seconds()
     minutes = divmod(duration_in_s, 60)[0]
     return minutes
+
+
+def calculate_distance(x1,y1,x2,y2):
+    x_offset=x2-x1
+    y_offset=y2-y1
+    x_offset_square=x_offset*x_offset
+    y_offset_square=y_offset*y_offset
+    distance=math.sqrt(x_offset_square+y_offset_square)
+    return distance
+
+
+def get_available_autos(lat,long):
+    available_autos_dict={}
+    for i in range(1,6):
+        auto_lat=i
+        auto_long=i
+        distance=calculate_distance(lat,long,auto_lat,auto_long)
+        available_autos_dict[i]=distance
+    sorted_list=sorted(available_autos_dict.items(), key=
+    lambda kv: (kv[1], kv[0]))
+    nearest_autos=[]
+    for i in range(0,3):
+        nearest_autos.append(sorted_list[i][0])
+    return nearest_autos
+
+
+
+
+
+
