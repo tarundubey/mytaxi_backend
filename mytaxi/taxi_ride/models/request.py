@@ -15,6 +15,8 @@ class Request(models.Model):
     #                               on_delete=models.SET_NULL, null=True, blank=True
     #                               )
     status=models.CharField(max_length=255,default='pending')
+    latitude=models.IntegerField()
+    longitude=models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     picked_up_at=models.DateTimeField(null=True,blank=True,default=None)
     completed_at=models.DateTimeField(null=True,blank=True,default=None)

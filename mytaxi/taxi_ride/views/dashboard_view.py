@@ -11,8 +11,10 @@ class DashboardView(APIView):
         user = request.user
 
         with transaction.atomic():
+
+
             try:
-                response=get_available_requests(request.data,acceptor_id, request.user)
+                response = get_available_requests(request.data, acceptor_id, request.user)
                 return Response(response)
             except Exception as e:
                 print(e)
