@@ -25,7 +25,8 @@ SECRET_KEY = '0^nyyob=^h6)faaig%h84h8f2d1j=u94m@2+!p^&45!$!bebid'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-13-233-214-13.ap-south-1.compute.amazonaws.com','localhost']
+
 
 
 # Application definition
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'taxi_auth',
     'rest_framework',
     'taxi_ride'
@@ -51,8 +53,38 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+'http://taxi-front.s3-website.us-east-2.amazonaws.com',
+    'localhost:4200',
+)
+CORS_ORIGIN_REGEX_WHITELIST = (
+'http://taxi-front.s3-website.us-east-2.amazonaws.com',
+    'localhost:4200',
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
 ROOT_URLCONF = 'mytaxi.urls'
 REST_FRAMEWORK = {
 'DEFAULT_PERMISSION_CLASSES': (
