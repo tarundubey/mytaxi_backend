@@ -36,25 +36,20 @@ time of request, time elapsed and current status(waiting, ongoing) with refresh 
 
 Once a new request is placed, it is shown in the tab1 of all drivers. Whichever driver clicks first
 will gets the request and, it will go to their tab2 (say Auto no :3), then it is removed from other
-drivers list and even if they click, they should see “request no longer available”
-> DB should have tables for requests with time of request, location of request, status of
-request(0­waiting,1­ongoing, 2­complete)and which auto picked up
-> Once a request is picked up, all requests take 5 mins to complete
+drivers list.
 
 version 2 :
-Kindly attempt this only when version 1 is complete in all respects and a demo is done.
-Now extend the Backend to consider locations also
-1. Assume Autos are at 5 different locations
+1. Autos are at 5 different locations
 a. Auto 1 is always at (1,1)
 b. Auto 2 = (2,2)
 c. Auto 3 = (3,3)
 d. Auto 4 = (4,4)
 e. Auto 5 = (5,5)
-2. Take location also when placing requests from customer App
+2. Location also taken when placing requests from customer App
 (assume city is a 5km x 5km area )
-a. Customer app should have textboxes to enter x & y location data: where x,y are
+a. Customer app has textboxes to enter x & y location data: where x,y are
 integers from 1 to 5
 
 3. New requests are shown to only 3 nearest available autos in their TAB1.
 4. If more than 10 requests are waiting, then reject new requests from CUSTOMER APP
-and inform customer with message: “Rides not available. try again later
+and informs customer with message: “Rides not available. try again later
