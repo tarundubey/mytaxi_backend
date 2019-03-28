@@ -1,0 +1,4 @@
+django
+django-simple-history==1.9.0
+djangorestframework==3.7.7
+djangorestframework-jwt==1.11.0
