@@ -48,7 +48,12 @@ def token(request):
             'client_secret': CLIENT_SECRET,
         },
     )
-    return Response(r.json())
+    print(r.status_code)
+    # Return if its Oauth return bad request
+    if r.status_code == 400 or 403 or 404 :
+        return Response({'message': 'invalid Username or Password'}, status=403)
+    # Return if Username password is ok
+    return Response(r.json(), r.status_code)
 
 
 @api_view(['POST'])
@@ -71,3 +76,4 @@ def revoke_token(request):
         return Response({'message': 'token revoked'}, r.status_code)
     # Return the error if it goes badly
     return Response(r.json(), r.status_code)
+

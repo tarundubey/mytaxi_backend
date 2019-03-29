@@ -15,7 +15,6 @@ class DashboardView(APIView):
     def post(self,request,acceptor_id):
         user = request.user
         print(user)
-
         with transaction.atomic():
 
             try:
