@@ -50,7 +50,7 @@ def token(request):
     )
     print(r.status_code)
     # Return if its Oauth return bad request
-    if r.status_code == 400 or 403 or 404 :
+    if r.status_code == 400:
         return Response({'message': 'invalid Username or Password'}, status=403)
     # Return if Username password is ok
     return Response(r.json(), r.status_code)
