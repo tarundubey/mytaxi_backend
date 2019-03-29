@@ -4,6 +4,6 @@ from .views.views import token, revoke_token
 
 urlpatterns = [
     path('login/', token),
-    path('logout/',revoke_token)
+    path('logout/',revoke_token),
     #     path('users/', UserView.as_view()),
  ]

@@ -1,5 +1,6 @@
 # Create your views here.
 import requests
+from oauth2_provider.decorators import protected_resource
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -48,7 +49,6 @@ def token(request):
             'client_secret': CLIENT_SECRET,
         },
     )
-    print(r.status_code)
     # Return if its Oauth return bad request
     if r.status_code == 400:
         return Response({'message': 'invalid Username or Password'}, status=403)
@@ -76,4 +76,8 @@ def revoke_token(request):
         return Response({'message': 'token revoked'}, r.status_code)
     # Return the error if it goes badly
     return Response(r.json(), r.status_code)
+
+
+
+
 
