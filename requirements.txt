@@ -19,7 +19,7 @@ django-redis==4.8.0
 django-rest-swagger==2.1.2
 django-silk==1.0.0
 django-simple-history==1.9.0
-djangorestframework==3.7.7
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 et-xmlfile==1.0.1
 fpdf==1.7.2
